@@ -16,3 +16,13 @@ RUN wget https://dl.bintray.com/sbt/debian/sbt-0.13.9.deb
 RUN apt-get update
 RUN dpkg -i sbt-0.13.9.deb
 RUN sbt
+
+# Install the agent installer
+RUN npm install -g vsoagent-installer
+
+# Create Agents
+RUN mkdir /opt/myagent
+WORKDIR /opt/myagent
+RUN vsoagent-installer
+
+ENTRYPOINT /bin/bash
