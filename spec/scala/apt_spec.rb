@@ -13,6 +13,10 @@ describe package('git') do
   it { should be_installed.by('apt') }
 end
 
+describe package('wget') do
+  it { should be_installed.by('apt') }
+end
+
 describe package('default-jdk') do
   it { should be_installed.by('apt') }
 end
