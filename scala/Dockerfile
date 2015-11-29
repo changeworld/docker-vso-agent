@@ -1,28 +1,33 @@
 FROM ubuntu
 MAINTAINER Takashi Takebayashi <changesworlds@gmail.com>
 
-# Install packages for JDK, scala, npm, nodejs
-RUN apt-get update
-RUN apt-get install -y --force-yes curl git wget default-jdk scala nodejs npm
-
-# Rename nodojs to node
-RUN update-alternatives --install /usr/bin/node node /usr/bin/nodejs 10
-
+# Install packages for JDK, Scala, npm, Node.js
+# Update-alternative nodojs to node
 # Update npm
-RUN npm install npm -g
-
 # Install sbt
-RUN wget https://dl.bintray.com/sbt/debian/sbt-0.13.9.deb
-RUN apt-get update
-RUN dpkg -i sbt-0.13.9.deb
-RUN sbt
-
 # Install the agent installer
-RUN npm install -g vsoagent-installer
+# Create Agent
+RUN apt-get update && \
+    apt-get install -y --force-yes \
+     curl \
+     default-jdk \
+     git \
+     nodejs \
+     npm \
+     scala \
+     wget && \
+    update-alternatives --install /usr/bin/node node /usr/bin/nodejs 10 && \
+    npm install npm -g && \
+    wget https://dl.bintray.com/sbt/debian/sbt-0.13.9.deb && \
+    apt-get update && \
+    dpkg -i sbt-0.13.9.deb && \
+    sbt && \
+    npm install -g vsoagent-installer && \
+    mkdir /opt/myagent && \
+    cd /opt/myagent && \
+    vsoagent-installer && \
+    echo "vsoagent\nvsoagent\n\n\n\n\n\n\n" | adduser vsoagent && \
+    chown -R vsoagent /opt/myagent
 
-# Create Agents
-RUN mkdir /opt/myagent
 WORKDIR /opt/myagent
-RUN vsoagent-installer
-
 ENTRYPOINT /bin/bash
